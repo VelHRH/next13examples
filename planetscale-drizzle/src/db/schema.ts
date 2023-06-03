@@ -13,7 +13,7 @@ export const books = mysqlTable(
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
  },
- (countries) => ({
-  nameIndex: uniqueIndex("name_idx").on(countries.name),
+ (books) => ({
+  nameIndex: uniqueIndex("name_idx").on(books.name),
  })
 );
