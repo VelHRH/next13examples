@@ -27,19 +27,20 @@ export const authOptions: NextAuthOptions = {
  session: {
   strategy: "jwt",
  },
- pages: "login",
+ pages: {
+  signIn: "/login",
+ },
  providers: [
   GoogleProvider({
    clientId: getGoogleCredentials().clientId,
    clientSecret: getGoogleCredentials().clientSecret,
   }),
   CredentialsProvider({
-   name: "credentials",
+   type: "credentials",
    async authorize(credentials) {
     if (!credentials.email || !credentials.password) {
      return null;
     }
-    console.log(credentials);
     const user = await prisma.user.findUnique({
      where: {
       email: credentials.email,
@@ -63,4 +64,25 @@ export const authOptions: NextAuthOptions = {
    },
   }),
  ],
+ callbacks: {
+  session: ({ session, token }) => {
+   return {
+    ...session,
+    user: {
+     ...session.user,
+     id: token.id,
+    },
+   };
+  },
+  jwt: ({ token, user }) => {
+   if (user) {
+    const u = user as unknown as any;
+    return {
+     ...token,
+     id: u.id,
+    };
+   }
+   return token;
+  },
+ },
 };

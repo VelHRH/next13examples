@@ -1,18 +1,30 @@
+// @ts-nocheck
+
 "use client";
 import { FC, useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const Login: FC = () => {
  const [email, setEmail] = useState("");
  const [pass, setPass] = useState("");
-
- const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+ const [isLoading, setIsLoading] = useState(false);
+ const router = useRouter();
+ const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
   e.preventDefault();
-  await signIn("credentials", {
+  setIsLoading(true);
+  signIn("credentials", {
    email: email,
    password: pass,
-   redirect: true,
-   callbackUrl: "/",
+   redirect: false,
+  }).then(({ ok, error }) => {
+   if (ok) {
+    router.push("/");
+   } else {
+    toast.error("Wrong login or password!");
+   }
+   setIsLoading(false);
   });
  };
  return (
@@ -39,7 +51,7 @@ const Login: FC = () => {
      className="rounded-md p-2 focus:outline-none"
     />
     <button className=" w-full py-1 bg-pink-500 hover:bg-pink-600 transition-colors mt-1 rounded-full text-white">
-     Login
+     {isLoading ? "Loading..." : "Login"}
     </button>
    </form>
   </div>
