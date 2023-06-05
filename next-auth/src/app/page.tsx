@@ -1,3 +1,4 @@
+import Logout from "@/components/Logout";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -7,12 +8,15 @@ export default async function Home() {
  return (
   <div className="px-20 pt-5 font-bold font-2xl flex justify-between">
    <p>Main Page</p>
-   <Link
-    href={session === null ? "/login" : `/${session.user?.id}`}
-    className="hover:underline"
-   >
-    {session === null ? "Login" : session.user?.name}
-   </Link>
+   {session === null ? (
+    <Link href="/login" className="hover:underline">
+     Login
+    </Link>
+   ) : (
+    <>
+     <span>{session.user?.name}</span> <Logout />
+    </>
+   )}
   </div>
  );
 }
