@@ -31,10 +31,6 @@ export const authOptions: NextAuthOptions = {
   signIn: "/login",
  },
  providers: [
-  GoogleProvider({
-   clientId: getGoogleCredentials().clientId,
-   clientSecret: getGoogleCredentials().clientSecret,
-  }),
   CredentialsProvider({
    type: "credentials",
    async authorize(credentials) {
@@ -46,7 +42,7 @@ export const authOptions: NextAuthOptions = {
       email: credentials.email,
      },
     });
-
+    console.log(user);
     if (!user) {
      return null;
     }
@@ -75,6 +71,7 @@ export const authOptions: NextAuthOptions = {
    };
   },
   jwt: ({ token, user }) => {
+   console.log(token);
    if (user) {
     const u = user as unknown as any;
     return {
