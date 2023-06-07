@@ -1,5 +1,6 @@
-import { db } from "@/db";
-import { books } from "@/db/schema";
+import { db } from "@/lib/db";
+import { books } from "@/lib/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export default async function Home() {
@@ -7,8 +8,15 @@ export default async function Home() {
 
  const createBook = async (data: FormData) => {
   "use server";
-  await db.insert(books).values({ name: data.get("book") as string });
-  revalidatePath("/");
+  const existing = await db
+   .select()
+   .from(books)
+   .where(sql`${books.name} = ${data.get("book")}`);
+  console.log(existing.length);
+  if (existing.length === 0) {
+   await db.insert(books).values({ name: data.get("book") as string });
+   revalidatePath("/");
+  }
  };
  return (
   <div className="w-full flex p-10 text-center text-pink-500 text-2xl gap-4 items-start">
