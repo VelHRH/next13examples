@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AuthForm from "./auth-form";
 
 export default function Home() {
@@ -12,8 +13,11 @@ export default function Home() {
     </p>
    </div>
    <div className="col-6 auth-widget">
-    <AuthForm />
+    <AuthForm view="magic_link" />
    </div>
+   <Link className="duration-300 hover:underline" href="/auth/singup">
+    Have no account yet?
+   </Link>
   </div>
  );
 }
