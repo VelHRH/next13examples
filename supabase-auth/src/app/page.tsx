@@ -13,7 +13,7 @@ export default function Home() {
     </p>
    </div>
    <div className="col-6 auth-widget">
-    <AuthForm view="magic_link" />
+    <AuthForm view="forgotten_password" />
    </div>
    <Link className="duration-300 hover:underline" href="/auth/singup">
     Have no account yet?
